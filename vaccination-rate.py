@@ -3,11 +3,21 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 
+
 # In[2]
-vaccine_data = pd.read_excel(
-    r'E:\GIS\VaccinationRate\vaccine.xlsx', skiprows=[0])
+# data = pd.read_html(
+#     'https://meta.vn/hotro/dien-tich-va-dan-so-cac-tinh-viet-nam-10058')
+
+# for population_data in data:
+#     print(population_data)
+
+# population_data.to_excel(r'E:\GIS\PopulationVietNam\pop.xlsx')
 
 # In[3]
+vaccine_data = pd.read_excel(
+    r'D:\DataBackupStudy\GIS\VaccinationRate\vaccine.xlsx', skiprows=[0])
+
+# In[4]
 
 vaccine_data = vaccine_data[['Tỉnh/Thành phố',
                              'Dân số (người)', 'Số liều vaccine']]
@@ -15,7 +25,7 @@ vaccine_data.rename(columns={'Tỉnh/Thành phố': 'District',
                     'Dân số (người)': 'Population', 'Số liều vaccine': 'Vaccine'}, inplace=True)
 
 
-# In[4]
+# In[5]
 count = len(vaccine_data['Population'])
 for i in range(0, count):
     pop = vaccine_data['Population'][i]
@@ -23,17 +33,17 @@ for i in range(0, count):
     vaccine_data.replace(pop, new_pop, inplace=True)
 
 
-# In[5]
+# In[6]
 
 nep_districts = gpd.read_file(
-    r'E:\GIS\VaccinationRate\VNM_adm\VNM_adm1.shp')
+    r'D:\DataBackupStudy\GIS\VaccinationRate\VNM_adm\VNM_adm1.shp')
 
 nep_districts = nep_districts[['NAME_1', 'geometry']]
 nep_districts.rename(columns={'NAME_1': 'District'}, inplace=True)
 
 nep_districts.to_crs(epsg=32645, inplace=True)
 
-# In[6]
+# In[7]
 vaccine_data.replace('Đắk Nông', 'Đăk Nông', inplace=True)
 vaccine_data.replace('Thành phố Hồ Chí Minh',
                      'Hồ Chí Minh city', inplace=True)
@@ -45,12 +55,12 @@ for index, row in nep_districts['District'].iteritems():
     else:
         print('The district ', row, ' is NOT in the vaccine_data list')
 
-# In[7]
-nep_districts = nep_districts.merge(vaccine_data, on='District')
 # In[8]
+nep_districts = nep_districts.merge(vaccine_data, on='District')
+# In[9]
 nep_districts['Vaccination Rate (%)'] = (nep_districts['Vaccine'] /
                                          nep_districts['Population']) * 100
-# In[9]
+# In[10]
 nep_districts.plot(column='Vaccination Rate (%)',
                    cmap='Spectral', legend=True, figsize=(6, 12))
 
