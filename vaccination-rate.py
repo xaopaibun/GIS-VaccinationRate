@@ -61,7 +61,19 @@ nep_districts = nep_districts.merge(vaccine_data, on='District')
 nep_districts['Vaccination Rate (%)'] = (nep_districts['Vaccine'] /
                                          nep_districts['Population']) * 100
 # In[10]
+# nep_districts.plot(column='Vaccination Rate (%)',
+#                    cmap='Spectral', legend=True, figsize=(6, 12))
+
+# In[11]
+
+nep_districts['coords'] = nep_districts['geometry'].apply(lambda x: x.representative_point().coords[:])
+nep_districts['coords'] = [coords[0] for coords in nep_districts['coords']]
+
+# In[12]
 nep_districts.plot(column='Vaccination Rate (%)',
-                   cmap='Spectral', legend=True, figsize=(6, 12))
+                   cmap='Spectral', legend=True, figsize=(20, 28))
+for idx, row in nep_districts.iterrows():
+    plt.annotate(s=row['District'], xy=row['coords'],
+                 horizontalalignment='center')
 
 # %%
