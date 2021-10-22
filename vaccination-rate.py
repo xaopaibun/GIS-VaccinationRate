@@ -2,6 +2,7 @@
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import contextily as ctx
 
 
 # In[2]
@@ -73,7 +74,14 @@ nep_districts['coords'] = [coords[0] for coords in nep_districts['coords']]
 nep_districts.plot(column='Vaccination Rate (%)',
                    cmap='Spectral', legend=True, figsize=(20, 28))
 for idx, row in nep_districts.iterrows():
-    plt.annotate(s=row['District'], xy=row['coords'],
+    plt.annotate(text=row['District'], xy=row['coords'],
                  horizontalalignment='center')
+
+# In[13]
+nep_districts.crs
+df_wm = nep_districts.to_crs(epsg=3857 )
+ax = df_wm.plot(figsize=(20, 28), cmap='Spectral')
+ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLite)
+ctx.add_basemap(ax, source=ctx.providers.Stamen.TonerLabels)
 
 # %%
