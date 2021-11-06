@@ -16,7 +16,7 @@ import contextily as ctx
 
 # In[3]
 vaccine_data = pd.read_excel(
-    r'D:\DataBackupStudy\GIS\VaccinationRate\vaccine.xlsx', skiprows=[0])
+    r'./vaccine.xlsx', skiprows=[0])
 
 # In[4]
 
@@ -37,7 +37,7 @@ for i in range(0, count):
 # In[6]
 
 nep_districts = gpd.read_file(
-    r'D:\DataBackupStudy\GIS\VaccinationRate\VNM_adm\VNM_adm1.shp')
+    r'./VNM_adm/VNM_adm1.shp')
 
 nep_districts = nep_districts[['NAME_1', 'geometry']]
 nep_districts.rename(columns={'NAME_1': 'District'}, inplace=True)
